@@ -108,12 +108,14 @@ body {
 .card__content-wrapper {
   opacity: 0;
   visibility: hidden;
+  position: absolute;
   transition: 0.25s ease;
 }
 
 .card__content-wrapper.active {
   opacity: 1;
   visibility: visible;
+  position: static;
 }
 
 .card__title {
