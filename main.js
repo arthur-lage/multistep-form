@@ -11,13 +11,14 @@ const goBackButton = document.querySelector(".go__back");
 const nextStep = document.querySelector(".next__step");
 const confirmButton = document.querySelector(".confirm");
 
-let currentStep = 1;
+let currentStep = 2;
 
 const formState = {
   name: "",
   email: "",
   phone: "",
   plan: "",
+  period: "",
   addons: [],
 };
 
@@ -87,8 +88,76 @@ function createFormInputEventListeners() {
     .addEventListener("input", (e) => (formState.phone = e));
 }
 
+function clearSelectedPlans() {
+  document.querySelectorAll(".card__plan").forEach((plan) => {
+    plan.classList.remove("selected");
+  });
+}
+
+function changePriceOfPlans(period) {
+  if (period == "monthly") {
+    document
+      .querySelectorAll(".card__plan")
+      .forEach((plan) => plan.classList.remove("yearly"));
+
+    document.querySelector(
+      ".card__plan[data-plan='arcade'] .card__plan-price"
+    ).innerHTML = "$9/mo";
+    document.querySelector(
+      ".card__plan[data-plan='advanced'] .card__plan-price"
+    ).innerHTML = "$12/mo";
+    document.querySelector(
+      ".card__plan[data-plan='pro'] .card__plan-price"
+    ).innerHTML = "$15/mo";
+  } else {
+    document
+      .querySelectorAll(".card__plan")
+      .forEach((plan) => plan.classList.add("yearly"));
+
+    document.querySelector(
+      ".card__plan[data-plan='arcade'] .card__plan-price"
+    ).innerHTML = "$90/yr";
+    document.querySelector(
+      ".card__plan[data-plan='advanced'] .card__plan-price"
+    ).innerHTML = "$120/yr";
+    document.querySelector(
+      ".card__plan[data-plan='pro'] .card__plan-price"
+    ).innerHTML = "$150/yr";
+  }
+}
+
+function createPlanEventListeners() {
+  document.querySelectorAll(".card__plan").forEach((plan) => {
+    plan.addEventListener("click", (currentPlan) => {
+      clearSelectedPlans();
+
+      currentPlan.target.classList.add("selected");
+
+      formState.plan = currentPlan.target.dataset["plan"];
+    });
+  });
+
+  const planToggler = document.querySelector(".monthly__toggler-wrapper");
+
+  planToggler.classList.add("monthly");
+  formState.period = "monthly";
+
+  planToggler.addEventListener("click", () => {
+    if (planToggler.classList.contains("monthly")) {
+      planToggler.classList.replace("monthly", "yearly");
+      formState.period = "yearly";
+    } else {
+      planToggler.classList.replace("yearly", "monthly");
+      formState.period = "monthly";
+    }
+
+    changePriceOfPlans(formState.period);
+  });
+}
+
 window.addEventListener("load", () => {
   createFormInputEventListeners();
+  createPlanEventListeners();
   updateStepActiveClass();
   updateActiveStep();
 });
@@ -105,49 +174,49 @@ function clearInputErrors() {
   document.querySelector("#phone").classList.remove("error");
 }
 
-function showErrors(errors) {
-  const errorsTextEl = document.querySelectorAll(".input__error");
-
-  errors.forEach((error) => {
-    const errorEl = document.querySelector(`#${error.id}`);
-    errorEl.classList.add("error");
-  });
-
-  for (let i = 0; i < errors.length; i++) {
-    errorsTextEl[i].innerHTML = errors[i].error;
-  }
-}
+const availablePlans = ["arcade", "advanced", "pro"];
 
 nextStep.addEventListener("click", () => {
   if (currentStep == 1) {
-    clearInputErrors();
+    let hasErrors = false;
 
-    let errors = [];
+    clearInputErrors();
 
     const nameInput = document.querySelector("#name");
     const emailInput = document.querySelector("#email");
     const phoneInput = document.querySelector("#phone");
 
     if (nameInput.value.trim().length == 0) {
+      hasErrors = true;
       document.querySelector("#name").classList.add("error");
-      errors.push({ id: "name", error: "This field is required." });
+      document.querySelector(
+        ".input__field:has(.input__box.error):has(#name) .input__error"
+      ).innerHTML = "This field is required.";
     }
 
     if (emailInput.value.trim().length == 0) {
+      hasErrors = true;
       document.querySelector("#email").classList.add("error");
-      errors.push({ id: "email", error: "This field is required." });
+      document.querySelector(
+        ".input__field:has(.input__box.error):has(#email) .input__error"
+      ).innerHTML = "This field is required.";
     } else if (!validateEmail(emailInput.value)) {
+      hasErrors = true;
       document.querySelector("#email").classList.add("error");
-      errors.push({ id: "email", error: "Invalid email." });
+      document.querySelector(
+        ".input__field:has(.input__box.error):has(#email) .input__error"
+      ).innerHTML = "Invalid email format.";
     }
 
     if (phoneInput.value.trim().length == 0) {
+      hasErrors = true;
       document.querySelector("#phone").classList.add("error");
-      errors.push({ id: "phone", error: "This field is required." });
+      document.querySelector(
+        ".input__field:has(.input__box.error):has(#phone) .input__error"
+      ).innerHTML = "This field is required.";
     }
 
-    if (errors.length > 0) {
-      showErrors(errors);
+    if (hasErrors) {
       return;
     }
 
@@ -156,15 +225,29 @@ nextStep.addEventListener("click", () => {
     formState.phone = phoneInput.value;
   }
 
+  if (currentStep == 2) {
+    let hasPlan = false;
+
+    for (let plan of availablePlans) {
+      if (formState.plan == plan) {
+        hasPlan = true;
+      }
+    }
+
+    if (!hasPlan) {
+      return;
+    }
+  }
+
   increaseCurrentStep();
   updateActiveStep();
   updateStepActiveClass();
 });
 
 confirmButton.addEventListener("click", () => {
-  const stepsArray = document.querySelectorAll(".card__content-wrapper")
-  
-  if(currentStep == stepsArray.length) {
-    alert("auauau")
+  const stepsArray = document.querySelectorAll(".card__content-wrapper");
+
+  if (currentStep == stepsArray.length) {
+    alert("auauau");
   }
 });

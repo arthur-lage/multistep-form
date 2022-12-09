@@ -249,6 +249,119 @@ body {
   display: none;
 }
 
+.card__plans {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.card__plan {
+  width: 17.5rem;
+  min-height: 17.5rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--light-gray);
+  transition: 0.15s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.card__plan:hover,
+.card__plan.selected {
+  border-color: var(--purplish-blue);
+}
+
+.card__plan-image {
+  width: 5rem;
+  height: 5rem;
+}
+
+.card__plan-text {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+}
+
+.card__plan-name {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--marine-blue);
+}
+
+.card__plan-price {
+  font-size: 1.6rem;
+  color: var(--cool-gray);
+}
+
+.card__plan-free-months {
+  position: absolute;
+  visibility: hidden;
+  transition: 0.15s ease;
+  opacity: 0;
+}
+
+.card__plan.yearly .card__plan-free-months {
+  opacity: 1;
+  visibility: visible;
+  position: static;
+  margin-top: 0.5rem;
+  font-size: 1.6rem;
+  color: var(--marine-blue);
+}
+
+.monthly__toggler-wrapper {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+.monthly__toggler-monthly,
+.monthly__toggler-yearly {
+  font-size: 1.6rem;
+  transition: 0.15s ease;
+  font-weight: 500;
+  color: var(--cool-gray);
+}
+
+.monthly__toggler-toggler {
+  width: 6rem;
+  height: 3rem;
+  position: relative;
+  cursor: pointer;
+  background-color: var(--marine-blue);
+  border-radius: 50rem;
+}
+
+.monthly__toggler-wrapper.monthly .monthly__toggler-monthly {
+  color: var(--marine-blue);
+}
+
+.monthly__toggler-wrapper.yearly .monthly__toggler-yearly {
+  color: var(--marine-blue);
+}
+
+.monthly__toggler-ball {
+  background-color: var(--white);
+  transition: 0.25s ease;
+  width: 2rem;
+  height: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  position: absolute;
+}
+
+.monthly__toggler-wrapper.monthly .monthly__toggler-ball {
+  left: 0.5rem;
+}
+
+.monthly__toggler-wrapper.yearly .monthly__toggler-ball {
+  left: 3.5rem;
+}
+
 .attribution {
   font-size: 11px;
   text-align: center;
