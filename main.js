@@ -29,7 +29,7 @@ function clearStepsActiveClass() {
 
 function clearActiveStep() {
   if (currentStep != 1) {
-    document.querySelector(`[data-step='1']`).classList.remove("first");
+    document.querySelector(`.card__content`).classList.remove("first");
   }
 
   document.querySelectorAll(".card__content-wrapper").forEach((el) => {
@@ -47,7 +47,7 @@ function updateActiveStep() {
   clearActiveStep();
 
   if (currentStep === 1) {
-    document.querySelector(`[data-step='1']`).classList.add("first");
+    document.querySelector(`.card__content`).classList.add("first");
   }
 
   document
@@ -58,6 +58,10 @@ function updateActiveStep() {
 function decreaseCurrentStep() {
   if (currentStep - 1 <= 0) {
     return;
+  }
+
+  if (currentStep - 1 == 1) {
+    document.querySelector(`.card__content`).classList.add("first");
   }
 
   currentStep--;
@@ -102,10 +106,16 @@ function clearInputErrors() {
 }
 
 function showErrors(errors) {
+  const errorsTextEl = document.querySelectorAll(".input__error");
+
   errors.forEach((error) => {
     const errorEl = document.querySelector(`#${error.id}`);
-    error.classList.add("error");
+    errorEl.classList.add("error");
   });
+
+  for (let i = 0; i < errors.length; i++) {
+    errorsTextEl[i].innerHTML = errors[i].error;
+  }
 }
 
 nextStep.addEventListener("click", () => {
@@ -120,17 +130,20 @@ nextStep.addEventListener("click", () => {
 
     if (nameInput.value.trim().length == 0) {
       document.querySelector("#name").classList.add("error");
-      errors.push({ id: "name", error: "Invalid name." });
+      errors.push({ id: "name", error: "This field is required." });
     }
 
-    if (!validateEmail(emailInput.value)) {
+    if (emailInput.value.trim().length == 0) {
+      document.querySelector("#email").classList.add("error");
+      errors.push({ id: "email", error: "This field is required." });
+    } else if (!validateEmail(emailInput.value)) {
       document.querySelector("#email").classList.add("error");
       errors.push({ id: "email", error: "Invalid email." });
     }
 
     if (phoneInput.value.trim().length == 0) {
       document.querySelector("#phone").classList.add("error");
-      errors.push({ id: "phone", error: "Invalid phone number." });
+      errors.push({ id: "phone", error: "This field is required." });
     }
 
     if (errors.length > 0) {
@@ -149,5 +162,9 @@ nextStep.addEventListener("click", () => {
 });
 
 confirmButton.addEventListener("click", () => {
-  alert("end");
+  const stepsArray = document.querySelectorAll(".card__content-wrapper")
+  
+  if(currentStep == stepsArray.length) {
+    alert("auauau")
+  }
 });
